@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { FaShoppingCart, FaPhoneAlt, FaBars, FaTimes } from "react-icons/fa";
 import logo from "../../../assets/kithula_logo.jpg";
 
 function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const location = useLocation();
 
-  // Handle scroll detection
+  
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 50) {
@@ -20,6 +22,9 @@ function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+ 
+  const isActive = (path) => location.pathname === path;
+
   return (
     <nav
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
@@ -31,8 +36,8 @@ function Navbar() {
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex items-center justify-between">
           
-          {/* Brand Logo & Name */}
-          <div className="flex items-center gap-3 cursor-pointer">
+          {/* Brand Logo & Name linked to Home */}
+          <Link to="/" className="flex items-center gap-3 cursor-pointer">
             <img
               src={logo}
               alt="Kithula Logo"
@@ -54,7 +59,7 @@ function Navbar() {
                 Pure Sri Lankan Kithul
               </p>
             </div>
-          </div>
+          </Link>
 
           {/* Desktop Navigation Links */}
           <ul
@@ -62,31 +67,52 @@ function Navbar() {
               isScrolled ? "text-[var(--color-text)]" : "text-white/90"
             }`}
           >
-            <li className="cursor-pointer hover:text-[var(--color-accent)] transition duration-300">
-              Home
+            <li>
+              <Link 
+                to="/" 
+                className={`hover:text-[var(--color-accent)] transition duration-300 ${isActive('/') ? 'text-[var(--color-accent)] font-semibold' : ''}`}
+              >
+                Home
+              </Link>
             </li>
-            <li className="cursor-pointer hover:text-[var(--color-accent)] transition duration-300">
-              About Us
+            <li>
+              <Link 
+                to="/about-us" 
+                className={`hover:text-[var(--color-accent)] transition duration-300 ${isActive('/about-us') ? 'text-[var(--color-accent)] font-semibold' : ''}`}
+              >
+                About Us
+              </Link>
             </li>
-            <li className="cursor-pointer hover:text-[var(--color-accent)] transition duration-300">
-              Products
+            <li>
+              <Link 
+                to="/products" 
+                className={`hover:text-[var(--color-accent)] transition duration-300 ${isActive('/products') ? 'text-[var(--color-accent)] font-semibold' : ''}`}
+              >
+                Products
+              </Link>
             </li>
-            <li className="cursor-pointer hover:text-[var(--color-accent)] transition duration-300">
-              Gallery
+            <li>
+              <Link 
+                to="/gallery" 
+                className={`hover:text-[var(--color-accent)] transition duration-300 ${isActive('/gallery') ? 'text-[var(--color-accent)] font-semibold' : ''}`}
+              >
+                Gallery
+              </Link>
             </li>
           </ul>
 
           {/* Right Action Icons */}
           <div className="flex items-center gap-5">
             {/* Phone (Desktop) */}
-            <div
+            <a
+              href="tel:0774567890"
               className={`hidden lg:flex items-center gap-2 font-medium text-sm transition-colors ${
                 isScrolled ? "text-[var(--color-primary)]" : "text-white"
               }`}
             >
               <FaPhoneAlt className="text-[var(--color-accent)]" />
               <span>077 456 7890</span>
-            </div>
+            </a>
 
             {/* Shopping Cart Button */}
             <button
@@ -118,42 +144,55 @@ function Navbar() {
         </div>
       </div>
 
-      {/* ========================================================= */}
-      {/* MOBILE RESPONSIVE SLIDE-DOWN MENU                         */}
-      {/* ========================================================= */}
+     
       {mobileMenuOpen && (
         <div className="md:hidden bg-[var(--color-surface)] border-t border-[var(--color-border)] shadow-xl mt-3 px-6 py-6 transition-all animate-fadeIn text-[var(--color-text)]">
           <ul className="flex flex-col gap-4 font-medium">
-            <li
-              onClick={() => setMobileMenuOpen(false)}
-              className="cursor-pointer hover:text-[var(--color-primary)] py-1 border-b border-[var(--color-border)]"
-            >
-              Home
+            <li>
+              <Link
+                to="/"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block cursor-pointer hover:text-[var(--color-primary)] py-1 border-b border-[var(--color-border)]"
+              >
+                Home
+              </Link>
             </li>
-            <li
-              onClick={() => setMobileMenuOpen(false)}
-              className="cursor-pointer hover:text-[var(--color-primary)] py-1 border-b border-[var(--color-border)]"
-            >
-              About Us
+            <li>
+              <Link
+                to="/about-us"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block cursor-pointer hover:text-[var(--color-primary)] py-1 border-b border-[var(--color-border)]"
+              >
+                About Us
+              </Link>
             </li>
-            <li
-              onClick={() => setMobileMenuOpen(false)}
-              className="cursor-pointer hover:text-[var(--color-primary)] py-1 border-b border-[var(--color-border)]"
-            >
-              Products
+            <li>
+              <Link
+                to="/products"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block cursor-pointer hover:text-[var(--color-primary)] py-1 border-b border-[var(--color-border)]"
+              >
+                Products
+              </Link>
             </li>
-            <li
-              onClick={() => setMobileMenuOpen(false)}
-              className="cursor-pointer hover:text-[var(--color-primary)] py-1 border-b border-[var(--color-border)]"
-            >
-              Gallery
+            <li>
+              <Link
+                to="/gallery"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block cursor-pointer hover:text-[var(--color-primary)] py-1 border-b border-[var(--color-border)]"
+              >
+                Gallery
+              </Link>
             </li>
           </ul>
 
-          <div className="flex items-center gap-2 mt-6 pt-4 border-t border-[var(--color-border)] text-[var(--color-primary)] font-semibold text-sm">
+          <a
+            href="tel:0774567890"
+            className="flex items-center gap-2 mt-6 pt-4 border-t border-[var(--color-border)] text-[var(--color-primary)] font-semibold text-sm"
+          >
             <FaPhoneAlt />
             <span>077 456 7890</span>
-          </div>
+          </a>
         </div>
       )}
     </nav>
