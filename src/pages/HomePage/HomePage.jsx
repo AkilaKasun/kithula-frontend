@@ -1,30 +1,100 @@
 import React, { useEffect, useState } from "react";
 import ProductServices from "../../services/product.service";
 import bannerImg from "../../assets/Banner_image.png";
-import ProductCard from "../../components/products/ProductCard"; 
+import ProductCard from "../../components/products/ProductCard";
+
+// Category Data for Kithula Products
+const POPULAR_CATEGORIES = [
+  {
+    id: "kithul-chocolate",
+    name: "Kithul Chocolate",
+    desc: "Rich, velvety cocoa infused with natural Kithul sweetness.",
+    image: "https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&q=80&w=800",
+  },
+  {
+    id: "yogurt",
+    name: "Yogurt",
+    desc: "Creamy traditional curd & yogurt topped with golden Kithul syrup.",
+    image: "https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&q=80&w=800",
+  },
+  {
+    id: "biscuits",
+    name: "Biscuits",
+    desc: "Crisp baked treats made with authentic Kithul jaggery.",
+    image: "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?auto=format&fit=crop&q=80&w=800",
+  },
+];
+
+// Product Slider Data (Between Categories and Products)
+const SLIDER_IMAGES = [
+  {
+    url: "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&q=80&w=1600",
+    title: "100% Organic Treacle",
+    subtitle: "Pure golden goodness tapped directly from wild palms.",
+  },
+  {
+    url: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&q=80&w=1600",
+    title: "Artisanal Kithul Jaggery",
+    subtitle: "Solidified sweet delight crafted through traditional boiling methods.",
+  },
+  {
+    url: "https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&q=80&w=1600",
+    title: "Infused Gourmet Treats",
+    subtitle: "Elevate your desserts with Sri Lanka's finest natural sweetener.",
+  },
+];
+
+// Customer Feedbacks Data
+const CUSTOMER_FEEDBACKS = [
+  {
+    id: 1,
+    name: "Nimali Perera",
+    role: "Verified Buyer",
+    rating: 5,
+    comment:
+      "The authenticity of Kithula's treacle is unmatched. It reminds me of the traditional Kithul we used to get directly from the village tappers!",
+  },
+  {
+    id: 2,
+    name: "Kasun Jayawardena",
+    role: "Chef & Food Specialist",
+    rating: 5,
+    comment:
+      "We use Kithula jaggery and syrup across our dessert menus. Pure quality, no artificial sugar, and rich natural aroma every single time.",
+  },
+  {
+    id: 3,
+    name: "Dilini Fernando",
+    role: "Regular Customer",
+    rating: 5,
+    comment:
+      "Fast delivery and exceptional packaging. The Kithul-infused chocolates and curd toppings have become a household favorite!",
+  },
+];
 
 // Sample gallery data for Kithula Grand
 const GALLERY_IMAGES = [
   {
-    url: 'https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?auto=format&fit=crop&q=80&w=1000',
-    title: 'Traditional Tapping',
-    desc: 'Harvested directly from forest palms in Sri Lanka',
+    url: "https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?auto=format&fit=crop&q=80&w=1000",
+    title: "Traditional Tapping",
+    desc: "Harvested directly from forest palms in Sri Lanka",
   },
   {
-    url: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&q=80&w=1000',
-    title: 'Pure Craftsmanship',
-    desc: 'Slow-boiled without added artificial preservatives or sugar',
+    url: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&q=80&w=1000",
+    title: "Pure Craftsmanship",
+    desc: "Slow-boiled without added artificial preservatives or sugar",
   },
   {
-    url: 'https://images.unsplash.com/photo-1511018556340-d16986a1c194?auto=format&fit=crop&q=80&w=1000',
-    title: 'Kithula Grand Estate',
-    desc: 'Experience natural sweetness refined over generations',
+    url: "https://images.unsplash.com/photo-1511018556340-d16986a1c194?auto=format&fit=crop&q=80&w=1000",
+    title: "Kithula Grand Estate",
+    desc: "Experience natural sweetness refined over generations",
   },
 ];
 
 export default function HomePage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -41,15 +111,22 @@ export default function HomePage() {
     fetchProducts();
   }, []);
 
+  // Auto-slide effect for product showcase carousel
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % SLIDER_IMAGES.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <div className="min-h-screen bg-[var(--color-background)] text-[var(--color-text)] font-sans">
-      
       {/* HERO SECTION */}
       <section className="relative h-screen w-full flex flex-col justify-between p-6 sm:p-12 text-white">
-        <div 
+        <div
           className="absolute inset-0 bg-cover bg-center z-0"
           style={{
-            backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url(${bannerImg})`
+            backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url(${bannerImg})`,
           }}
         />
 
@@ -72,11 +149,13 @@ export default function HomePage() {
 
           <h1 className="text-5xl sm:text-7xl lg:text-8xl font-serif font-light tracking-tight leading-[1.1]">
             Taste The Pure <br />
-            <span className="italic font-serif text-[var(--color-accent)]">Golden Nectar.</span>
+            <span className="italic font-serif text-[var(--color-accent)]">
+              Golden Nectar.
+            </span>
           </h1>
 
           <p className="max-w-xl mx-auto text-lg sm:text-xl text-white/80 font-light leading-relaxed">
-            Sourced directly from the lush central highlands of Sri Lanka. 
+            Sourced directly from the lush central highlands of Sri Lanka.
             Traditional, unrefined, and crafted with timeless passion.
           </p>
 
@@ -95,8 +174,96 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* POPULAR CATEGORIES SECTION */}
+      <section className="pt-20 pb-10 px-6 max-w-7xl mx-auto">
+        <div className="text-center max-w-2xl mx-auto mb-12 space-y-2">
+          <span className="text-[var(--color-secondary)] font-medium text-sm tracking-widest uppercase">
+            Browse By Category
+          </span>
+          <h2 className="text-3xl sm:text-5xl font-serif text-[var(--color-text)]">
+            Popular Categories
+          </h2>
+          <p className="text-[var(--color-text-secondary)] text-sm sm:text-base">
+            Discover our special range of handcrafted treats enriched with pure Kithul.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {POPULAR_CATEGORIES.map((cat) => (
+            <div
+              key={cat.id}
+              className="group relative h-80 rounded-2xl overflow-hidden shadow-md hover:shadow-xl border border-[var(--color-border)] cursor-pointer transition-all duration-500"
+            >
+              <img
+                src={cat.image}
+                alt={cat.name}
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent p-6 flex flex-col justify-end">
+                <h3 className="text-2xl font-serif text-white font-semibold group-hover:text-[var(--color-accent)] transition-colors">
+                  {cat.name}
+                </h3>
+                <p className="text-sm text-white/80 mt-1 font-light leading-relaxed">
+                  {cat.desc}
+                </p>
+                <div className="mt-3 text-xs uppercase tracking-wider font-semibold text-[var(--color-accent)] opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  Explore Category →
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* PRODUCT IMAGE SLIDER (BETWEEN CATEGORIES & PRODUCTS) */}
+      <section className="py-12 px-6 max-w-7xl mx-auto">
+        <div className="relative h-[400px] sm:h-[480px] w-full rounded-3xl overflow-hidden shadow-2xl border border-[var(--color-border)]">
+          {SLIDER_IMAGES.map((slide, index) => (
+            <div
+              key={index}
+              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+                index === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0"
+              }`}
+            >
+              <img
+                src={slide.url}
+                alt={slide.title}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent p-8 sm:p-16 flex flex-col justify-center max-w-2xl text-white">
+                <span className="text-[var(--color-accent)] font-medium text-xs sm:text-sm tracking-widest uppercase mb-2">
+                  Featured Craft
+                </span>
+                <h3 className="text-3xl sm:text-5xl font-serif leading-tight">
+                  {slide.title}
+                </h3>
+                <p className="mt-3 text-sm sm:text-lg text-white/80 font-light leading-relaxed">
+                  {slide.subtitle}
+                </p>
+              </div>
+            </div>
+          ))}
+
+          {/* Slider Navigation Dots */}
+          <div className="absolute bottom-6 right-6 z-20 flex gap-2">
+            {SLIDER_IMAGES.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => setCurrentSlide(idx)}
+                className={`h-2.5 rounded-full transition-all duration-300 ${
+                  idx === currentSlide
+                    ? "w-8 bg-[var(--color-accent)]"
+                    : "w-2.5 bg-white/50 hover:bg-white"
+                }`}
+                aria-label={`Go to slide ${idx + 1}`}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* PRODUCTS SECTION */}
-      <section className="py-24 px-6 max-w-7xl mx-auto">
+      <section className="py-16 px-6 max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 border-b border-[var(--color-border)] pb-8">
           <div>
             <span className="text-[var(--color-secondary)] font-medium text-sm tracking-widest uppercase">
@@ -114,7 +281,10 @@ export default function HomePage() {
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[1, 2, 3].map((n) => (
-              <div key={n} className="animate-pulse bg-[var(--color-surface)] h-96 rounded-2xl border border-[var(--color-border)]"></div>
+              <div
+                key={n}
+                className="animate-pulse bg-[var(--color-surface)] h-96 rounded-2xl border border-[var(--color-border)]"
+              ></div>
             ))}
           </div>
         ) : products.length === 0 ? (
@@ -128,6 +298,49 @@ export default function HomePage() {
             ))}
           </div>
         )}
+      </section>
+
+      {/* CUSTOMER FEEDBACKS SECTION (AFTER PRODUCTS) */}
+      <section className="py-20 px-6 bg-[var(--color-surface)] border-t border-b border-[var(--color-border)]">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center max-w-2xl mx-auto mb-16 space-y-2">
+            <span className="text-[var(--color-secondary)] font-medium text-sm tracking-widest uppercase">
+              Customer Love
+            </span>
+            <h2 className="text-3xl sm:text-5xl font-serif text-[var(--color-text)]">
+              What Our Clients Say
+            </h2>
+            <p className="text-[var(--color-text-secondary)] text-sm sm:text-base">
+              Read honest stories and feedback from pure Kithul enthusiasts across Sri Lanka.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {CUSTOMER_FEEDBACKS.map((review) => (
+              <div
+                key={review.id}
+                className="bg-[var(--color-background)] p-8 rounded-2xl border border-[var(--color-border)] shadow-sm flex flex-col justify-between space-y-4"
+              >
+                <div className="space-y-3">
+                  <div className="text-[var(--color-accent)] text-lg">
+                    {"★".repeat(review.rating)}
+                  </div>
+                  <p className="text-sm text-[var(--color-text-secondary)] italic leading-relaxed">
+                    "{review.comment}"
+                  </p>
+                </div>
+                <div className="pt-4 border-t border-[var(--color-border)]">
+                  <h4 className="font-serif font-semibold text-[var(--color-text)]">
+                    {review.name}
+                  </h4>
+                  <p className="text-xs text-[var(--color-text-secondary)] uppercase tracking-wider">
+                    {review.role}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* KITHULA GRAND SECTION */}
@@ -147,13 +360,13 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {GALLERY_IMAGES.map((img, index) => (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 className="relative group h-96 rounded-2xl overflow-hidden border border-white/10 shadow-2xl"
               >
-                <img 
-                  src={img.url} 
-                  alt={img.title} 
+                <img
+                  src={img.url}
+                  alt={img.title}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-6 flex flex-col justify-end">
@@ -169,7 +382,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
     </div>
   );
 }

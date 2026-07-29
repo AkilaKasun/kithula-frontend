@@ -8,7 +8,8 @@ function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
 
-  
+  const isHomePage = location.pathname === "/";
+
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 50) {
@@ -22,21 +23,26 @@ function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
- 
   const isActive = (path) => location.pathname === path;
 
+  // Static styling for internal pages vs dynamic transparent/scrolled overlay on Home page
+  const navBackgroundClass = isHomePage
+    ? isScrolled
+      ? "fixed top-0 left-0 bg-[var(--color-surface)] shadow-md py-3 border-b border-[var(--color-border)] text-[var(--color-text)]"
+      : "fixed top-0 left-0 bg-black/20 backdrop-blur-md border-b border-white/10 py-5 text-white"
+    : "sticky top-0 left-0 bg-[var(--color-surface)] shadow-sm py-4 border-b border-[var(--color-border)] text-[var(--color-text)]";
+
+  const brandHeadingClass = isHomePage && !isScrolled ? "text-white" : "text-[var(--color-primary)]";
+  const brandSubtextClass = isHomePage && !isScrolled ? "text-white/80" : "text-[var(--color-text-secondary)]";
+  const navTextClass = isHomePage && !isScrolled ? "text-white/90" : "text-[var(--color-text)]";
+  const phoneTextClass = isHomePage && !isScrolled ? "text-white" : "text-[var(--color-primary)]";
+
   return (
-    <nav
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
-        isScrolled
-          ? "bg-[var(--color-surface)] shadow-md py-3 border-b border-[var(--color-border)]"
-          : "bg-black/20 backdrop-blur-md border-b border-white/10 py-5 text-white"
-      }`}
-    >
+    <nav className={`w-full z-50 transition-all duration-300 ${navBackgroundClass}`}>
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex items-center justify-between">
           
-          {/* Brand Logo & Name linked to Home */}
+          {/* Brand Logo & Name */}
           <Link to="/" className="flex items-center gap-3 cursor-pointer">
             <img
               src={logo}
@@ -44,29 +50,17 @@ function Navbar() {
               className="h-12 w-12 rounded-full object-cover border-2 border-[var(--color-accent)] shadow-sm"
             />
             <div>
-              <h1
-                className={`text-2xl font-bold font-serif tracking-wider transition-colors ${
-                  isScrolled ? "text-[var(--color-primary)]" : "text-white"
-                }`}
-              >
+              <h1 className={`text-2xl font-bold font-serif tracking-wider transition-colors ${brandHeadingClass}`}>
                 KITHULA
               </h1>
-              <p
-                className={`text-[10px] tracking-wide uppercase transition-colors ${
-                  isScrolled ? "text-[var(--color-text-secondary)]" : "text-white/80"
-                }`}
-              >
+              <p className={`text-[10px] tracking-wide uppercase transition-colors ${brandSubtextClass}`}>
                 Pure Sri Lankan Kithul
               </p>
             </div>
           </Link>
 
           {/* Desktop Navigation Links */}
-          <ul
-            className={`hidden md:flex items-center gap-8 font-medium text-sm tracking-wide transition-colors ${
-              isScrolled ? "text-[var(--color-text)]" : "text-white/90"
-            }`}
-          >
+          <ul className={`hidden md:flex items-center gap-8 font-medium text-sm tracking-wide transition-colors ${navTextClass}`}>
             <li>
               <Link 
                 to="/" 
@@ -106,9 +100,7 @@ function Navbar() {
             {/* Phone (Desktop) */}
             <a
               href="tel:0774567890"
-              className={`hidden lg:flex items-center gap-2 font-medium text-sm transition-colors ${
-                isScrolled ? "text-[var(--color-primary)]" : "text-white"
-              }`}
+              className={`hidden lg:flex items-center gap-2 font-medium text-sm transition-colors ${phoneTextClass}`}
             >
               <FaPhoneAlt className="text-[var(--color-accent)]" />
               <span>077 456 7890</span>
@@ -117,9 +109,9 @@ function Navbar() {
             {/* Shopping Cart Button */}
             <button
               className={`relative p-3 rounded-full transition-all duration-300 ${
-                isScrolled
-                  ? "bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-dark)]"
-                  : "bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white hover:text-[var(--color-text)]"
+                isHomePage && !isScrolled
+                  ? "bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white hover:text-[var(--color-text)]"
+                  : "bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-dark)]"
               }`}
             >
               <FaShoppingCart size={18} />
@@ -133,9 +125,7 @@ function Navbar() {
             {/* Mobile Hamburger Menu Toggle */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className={`md:hidden p-2 rounded-lg text-2xl transition-colors ${
-                isScrolled ? "text-[var(--color-text)]" : "text-white"
-              }`}
+              className={`md:hidden p-2 rounded-lg text-2xl transition-colors ${navTextClass}`}
               aria-label="Toggle Navigation Menu"
             >
               {mobileMenuOpen ? <FaTimes /> : <FaBars />}
@@ -144,7 +134,7 @@ function Navbar() {
         </div>
       </div>
 
-     
+      {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
         <div className="md:hidden bg-[var(--color-surface)] border-t border-[var(--color-border)] shadow-xl mt-3 px-6 py-6 transition-all animate-fadeIn text-[var(--color-text)]">
           <ul className="flex flex-col gap-4 font-medium">
