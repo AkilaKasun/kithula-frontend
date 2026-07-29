@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ProductServices from "../../services/product.service";
-import bannerImg from "../../assets/Banner_image.png";
+import bannerImg from "../../assets/Banner_image.jpg";
 import ProductCard from "../../components/products/ProductCard";
 
 // Category Data for Kithula Products
@@ -126,7 +126,7 @@ export default function HomePage() {
         <div
           className="absolute inset-0 bg-cover bg-center z-0"
           style={{
-            backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url(${bannerImg})`,
+            backgroundImage: `linear-gradient(to right, rgba(0,0,0,0.7), rgba(0,0,0,0.3)), url(${bannerImg})`,
           }}
         />
 
@@ -141,49 +141,50 @@ export default function HomePage() {
           </button>
         </div>
 
-        <div className="relative z-10 max-w-4xl mx-auto text-center my-auto space-y-6">
+        {/* Hero Left Aligned Container */}
+        <div className="relative z-10 max-w-7xl mx-auto w-full my-auto space-y-6 text-left">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/20 text-sm tracking-wide">
             <span className="text-[var(--color-accent)]">★★★★★</span>
             <span className="text-white/90 font-medium">100% PURE & ORGANIC</span>
           </div>
 
-          <h1 className="text-5xl sm:text-7xl lg:text-8xl font-serif font-light tracking-tight leading-[1.1]">
+          <h1 className="text-6xl sm:text-8xl lg:text-9xl font-serif font-light tracking-tight leading-[1.05]">
             Taste The Pure <br />
             <span className="italic font-serif text-[var(--color-accent)]">
               Golden Nectar.
             </span>
           </h1>
 
-          <p className="max-w-xl mx-auto text-lg sm:text-xl text-white/80 font-light leading-relaxed">
+          <p className="max-w-xl text-lg sm:text-2xl text-white/90 font-light leading-relaxed">
             Sourced directly from the lush central highlands of Sri Lanka.
             Traditional, unrefined, and crafted with timeless passion.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-            <button className="w-full sm:w-auto px-8 py-4 bg-[var(--color-secondary)] hover:bg-[var(--color-secondary-dark)] text-white rounded-full font-medium transition-all shadow-lg hover:shadow-xl">
+          <div className="flex flex-col sm:flex-row items-center justify-start gap-4 pt-4">
+            <button className="w-full sm:w-auto px-8 py-4 bg-[var(--color-secondary)] hover:bg-[var(--color-secondary-dark)] text-white rounded-full font-medium transition-all shadow-lg hover:shadow-xl text-base">
               Shop Natural Products
             </button>
-            <button className="w-full sm:w-auto px-8 py-4 bg-white/10 backdrop-blur-md border border-white/30 hover:bg-white/20 text-white rounded-full font-medium transition-all">
+            <button className="w-full sm:w-auto px-8 py-4 bg-white/10 backdrop-blur-md border border-white/30 hover:bg-white/20 text-white rounded-full font-medium transition-all text-base">
               Discover Kithula Grand
             </button>
           </div>
         </div>
 
-        <div className="relative z-10 text-center pb-4 text-xs tracking-widest uppercase text-white/60">
+        <div className="relative z-10 text-left max-w-7xl mx-auto w-full pb-4 text-xs tracking-widest uppercase text-white/60">
           Scroll To Explore
         </div>
       </section>
 
       {/* POPULAR CATEGORIES SECTION */}
-      <section className="pt-20 pb-10 px-6 max-w-7xl mx-auto">
-        <div className="text-center max-w-2xl mx-auto mb-12 space-y-2">
-          <span className="text-[var(--color-secondary)] font-medium text-sm tracking-widest uppercase">
+      <section className="pt-24 pb-12 px-6 max-w-7xl mx-auto">
+        <div className="text-left max-w-3xl mb-14 space-y-3">
+          <span className="text-[var(--color-secondary)] font-medium text-sm sm:text-base tracking-widest uppercase">
             Browse By Category
           </span>
-          <h2 className="text-3xl sm:text-5xl font-serif text-[var(--color-text)]">
+          <h2 className="text-4xl sm:text-6xl font-serif text-[var(--color-text)] font-semibold">
             Popular Categories
           </h2>
-          <p className="text-[var(--color-text-secondary)] text-sm sm:text-base">
+          <p className="text-[var(--color-text-secondary)] text-base sm:text-lg">
             Discover our special range of handcrafted treats enriched with pure Kithul.
           </p>
         </div>
@@ -192,21 +193,21 @@ export default function HomePage() {
           {POPULAR_CATEGORIES.map((cat) => (
             <div
               key={cat.id}
-              className="group relative h-80 rounded-2xl overflow-hidden shadow-md hover:shadow-xl border border-[var(--color-border)] cursor-pointer transition-all duration-500"
+              className="group relative h-96 rounded-2xl overflow-hidden shadow-md hover:shadow-xl border border-[var(--color-border)] cursor-pointer transition-all duration-500"
             >
               <img
                 src={cat.image}
                 alt={cat.name}
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent p-6 flex flex-col justify-end">
-                <h3 className="text-2xl font-serif text-white font-semibold group-hover:text-[var(--color-accent)] transition-colors">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent p-8 flex flex-col justify-end text-left">
+                <h3 className="text-3xl font-serif text-white font-semibold group-hover:text-[var(--color-accent)] transition-colors">
                   {cat.name}
                 </h3>
-                <p className="text-sm text-white/80 mt-1 font-light leading-relaxed">
+                <p className="text-sm text-white/80 mt-2 font-light leading-relaxed">
                   {cat.desc}
                 </p>
-                <div className="mt-3 text-xs uppercase tracking-wider font-semibold text-[var(--color-accent)] opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div className="mt-4 text-xs uppercase tracking-wider font-semibold text-[var(--color-accent)] opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   Explore Category →
                 </div>
               </div>
@@ -215,9 +216,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* PRODUCT IMAGE SLIDER (BETWEEN CATEGORIES & PRODUCTS) */}
+      {/* PRODUCT IMAGE SLIDER */}
       <section className="py-12 px-6 max-w-7xl mx-auto">
-        <div className="relative h-[400px] sm:h-[480px] w-full rounded-3xl overflow-hidden shadow-2xl border border-[var(--color-border)]">
+        <div className="relative h-[450px] sm:h-[520px] w-full rounded-3xl overflow-hidden shadow-2xl border border-[var(--color-border)]">
           {SLIDER_IMAGES.map((slide, index) => (
             <div
               key={index}
@@ -230,14 +231,14 @@ export default function HomePage() {
                 alt={slide.title}
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent p-8 sm:p-16 flex flex-col justify-center max-w-2xl text-white">
-                <span className="text-[var(--color-accent)] font-medium text-xs sm:text-sm tracking-widest uppercase mb-2">
+              <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/40 to-transparent p-8 sm:p-20 flex flex-col justify-center max-w-3xl text-white text-left">
+                <span className="text-[var(--color-accent)] font-medium text-xs sm:text-sm tracking-widest uppercase mb-3">
                   Featured Craft
                 </span>
-                <h3 className="text-3xl sm:text-5xl font-serif leading-tight">
+                <h3 className="text-4xl sm:text-6xl font-serif leading-tight">
                   {slide.title}
                 </h3>
-                <p className="mt-3 text-sm sm:text-lg text-white/80 font-light leading-relaxed">
+                <p className="mt-4 text-base sm:text-xl text-white/80 font-light leading-relaxed">
                   {slide.subtitle}
                 </p>
               </div>
@@ -264,16 +265,16 @@ export default function HomePage() {
 
       {/* PRODUCTS SECTION */}
       <section className="py-16 px-6 max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 border-b border-[var(--color-border)] pb-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 border-b border-[var(--color-border)] pb-8 text-left">
           <div>
-            <span className="text-[var(--color-secondary)] font-medium text-sm tracking-widest uppercase">
+            <span className="text-[var(--color-secondary)] font-medium text-sm sm:text-base tracking-widest uppercase">
               Selected Harvest
             </span>
-            <h2 className="text-4xl sm:text-5xl font-serif text-[var(--color-text)] mt-2">
+            <h2 className="text-4xl sm:text-6xl font-serif text-[var(--color-text)] font-semibold mt-2">
               Featured Products
             </h2>
           </div>
-          <p className="text-[var(--color-text-secondary)] max-w-md mt-4 md:mt-0">
+          <p className="text-[var(--color-text-secondary)] text-base sm:text-lg max-w-md mt-4 md:mt-0">
             Hand-crafted in small batches to preserve original taste, aroma, and rich nutrients.
           </p>
         </div>
@@ -288,7 +289,7 @@ export default function HomePage() {
             ))}
           </div>
         ) : products.length === 0 ? (
-          <div className="text-center py-12 text-[var(--color-text-secondary)]">
+          <div className="text-left py-12 text-[var(--color-text-secondary)] text-base">
             No products available at the moment.
           </div>
         ) : (
@@ -300,17 +301,17 @@ export default function HomePage() {
         )}
       </section>
 
-      {/* CUSTOMER FEEDBACKS SECTION (AFTER PRODUCTS) */}
-      <section className="py-20 px-6 bg-[var(--color-surface)] border-t border-b border-[var(--color-border)]">
+      {/* CUSTOMER FEEDBACKS SECTION */}
+      <section className="py-24 px-6 bg-[var(--color-surface)] border-t border-b border-[var(--color-border)]">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-16 space-y-2">
-            <span className="text-[var(--color-secondary)] font-medium text-sm tracking-widest uppercase">
+          <div className="text-left max-w-3xl mb-16 space-y-3">
+            <span className="text-[var(--color-secondary)] font-medium text-sm sm:text-base tracking-widest uppercase">
               Customer Love
             </span>
-            <h2 className="text-3xl sm:text-5xl font-serif text-[var(--color-text)]">
+            <h2 className="text-4xl sm:text-6xl font-serif text-[var(--color-text)] font-semibold">
               What Our Clients Say
             </h2>
-            <p className="text-[var(--color-text-secondary)] text-sm sm:text-base">
+            <p className="text-[var(--color-text-secondary)] text-base sm:text-lg">
               Read honest stories and feedback from pure Kithul enthusiasts across Sri Lanka.
             </p>
           </div>
@@ -319,21 +320,21 @@ export default function HomePage() {
             {CUSTOMER_FEEDBACKS.map((review) => (
               <div
                 key={review.id}
-                className="bg-[var(--color-background)] p-8 rounded-2xl border border-[var(--color-border)] shadow-sm flex flex-col justify-between space-y-4"
+                className="bg-[var(--color-background)] p-8 rounded-2xl border border-[var(--color-border)] shadow-sm flex flex-col justify-between space-y-4 text-left"
               >
                 <div className="space-y-3">
-                  <div className="text-[var(--color-accent)] text-lg">
+                  <div className="text-[var(--color-accent)] text-xl">
                     {"★".repeat(review.rating)}
                   </div>
-                  <p className="text-sm text-[var(--color-text-secondary)] italic leading-relaxed">
+                  <p className="text-base text-[var(--color-text-secondary)] italic leading-relaxed">
                     "{review.comment}"
                   </p>
                 </div>
                 <div className="pt-4 border-t border-[var(--color-border)]">
-                  <h4 className="font-serif font-semibold text-[var(--color-text)]">
+                  <h4 className="font-serif font-semibold text-lg text-[var(--color-text)]">
                     {review.name}
                   </h4>
-                  <p className="text-xs text-[var(--color-text-secondary)] uppercase tracking-wider">
+                  <p className="text-xs text-[var(--color-text-secondary)] uppercase tracking-wider font-medium mt-0.5">
                     {review.role}
                   </p>
                 </div>
@@ -346,14 +347,14 @@ export default function HomePage() {
       {/* KITHULA GRAND SECTION */}
       <section className="bg-[var(--color-primary)] text-white py-24 px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
-            <span className="text-[var(--color-accent)] tracking-widest text-sm uppercase font-medium">
+          <div className="text-left max-w-3xl mb-16 space-y-4">
+            <span className="text-[var(--color-accent)] tracking-widest text-sm sm:text-base uppercase font-medium">
               The Experience
             </span>
-            <h2 className="text-4xl sm:text-6xl font-serif leading-tight">
+            <h2 className="text-5xl sm:text-7xl font-serif font-semibold leading-tight">
               Kithula Grand
             </h2>
-            <p className="text-white/80 font-light">
+            <p className="text-white/80 font-light text-base sm:text-lg leading-relaxed">
               Explore the heritage, tradition, and sustainable forest tapping methods that make our sap uniquely rich and flavorful.
             </p>
           </div>
@@ -369,11 +370,11 @@ export default function HomePage() {
                   alt={img.title}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-6 flex flex-col justify-end">
-                  <h3 className="text-2xl font-serif text-[var(--color-accent)]">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-8 flex flex-col justify-end text-left">
+                  <h3 className="text-2xl font-serif text-[var(--color-accent)] font-semibold">
                     {img.title}
                   </h3>
-                  <p className="text-sm text-white/80 mt-1 font-light">
+                  <p className="text-sm text-white/80 mt-1.5 font-light leading-relaxed">
                     {img.desc}
                   </p>
                 </div>

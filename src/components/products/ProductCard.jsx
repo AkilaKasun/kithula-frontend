@@ -1,20 +1,16 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaEye, FaShoppingCart } from 'react-icons/fa';
-import { toast } from 'react-toastify';
 
 export default function ProductCard({ product }) {
+  const navigate = useNavigate();
+
   if (!product) return null;
 
-  const handleAddToCart = (e) => {
-    e.stopPropagation(); // Prevents triggering parent link navigations if any
-    
-    if (product.is_active === false) {
-      toast.error("This product is currently out of stock.");
-      return;
-    }
-    
-    toast.success(`Added "${product.name}" to cart!`);
+  const handleGoToDetails = (e) => {
+    e.stopPropagation();
+    // Navigates directly to the product details page
+    navigate(`/products/${product.product_id}`);
   };
 
   return (
@@ -29,9 +25,9 @@ export default function ProductCard({ product }) {
             alt={product.name} 
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             onError={(e) => {
-              console.error(`S3 image load blocked/failed for: ${product.image_url}`);
+              console.error(`Image load failed for: ${product.image_url}`);
               e.target.onerror = null; 
-              e.target.src = "https://placehold.co/600x400?text=Image+Access+Blocked";
+              e.target.src = "https://placehold.co/600x400?text=Image+Not+Found";
             }}
           />
         </div>
@@ -61,9 +57,9 @@ export default function ProductCard({ product }) {
           </p>
         </div>
 
-        {/* Dual Button Grid */}
+        {/* Dual Button Grid - Both Navigate to Product Details */}
         <div className="grid grid-cols-2 gap-2">
-          {/* 1. View Product Button */}
+          {/* View Product Button */}
           <Link
             to={`/products/${product.product_id}`}
             className="w-full py-2.5 px-3 bg-[var(--color-background)] hover:bg-[var(--color-surface)] text-[var(--color-text)] border border-[var(--color-border)] text-xs uppercase tracking-wider font-semibold rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-sm text-center"
@@ -72,9 +68,9 @@ export default function ProductCard({ product }) {
             <span>View</span>
           </Link>
 
-          {/* 2. Add to Cart Button */}
+          {/* Add to Cart Button (Navigates to Product Details) */}
           <button
-            onClick={handleAddToCart}
+            onClick={handleGoToDetails}
             className="w-full py-2.5 px-3 bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white text-xs uppercase tracking-wider font-semibold rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-sm cursor-pointer"
           >
             <FaShoppingCart size={13} />

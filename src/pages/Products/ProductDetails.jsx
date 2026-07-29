@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import ProductServices from "../../services/product.service";
+import CartServices from "../../services/cart.service"; // Integrated Cart Service
 import { 
   FaShoppingCart, 
   FaMinus, 
@@ -14,27 +15,17 @@ import {
 import { toast } from "react-toastify";
 
 export default function ProductDetails() {
-  const params = useParams();
- 
-  const productId = params.id || params.product_id || params.productId;
-
+  const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [adding, setAdding] = useState(false);
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     const fetchProductDetails = async () => {
-      if (!productId) {
-        console.error("No product ID found in URL parameters:", params);
-        setLoading(false);
-        return;
-      }
-
       try {
         setLoading(true);
-        console.log("Fetching product details for ID:", productId);
-        const data = await ProductServices.getProductById(productId);
-        
+        const data = await ProductServices.getProductById(id);
         if (data && data.image_url) {
           data.image_url = encodeURI(data.image_url);
         }
@@ -46,8 +37,10 @@ export default function ProductDetails() {
       }
     };
 
-    fetchProductDetails();
-  }, [productId]);
+    if (id) {
+      fetchProductDetails();
+    }
+  }, [id]);
 
   const handleDecrease = () => {
     if (quantity > 1) {
@@ -64,12 +57,21 @@ export default function ProductDetails() {
     }
   };
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
     if (!product?.is_active) {
       toast.error("This product is currently out of stock.");
       return;
     }
-    toast.success(`Added ${quantity} x "${product.name}" to cart!`);
+
+    try {
+      setAdding(true);
+      // Triggers CartServices with selected quantity & auto-managed localStorage UUID
+      await CartServices.addToCart(product.product_id, quantity);
+    } catch (error) {
+      console.error("Add to cart failed:", error);
+    } finally {
+      setAdding(false);
+    }
   };
 
   const calculateTotal = () => {
@@ -211,7 +213,7 @@ export default function ProductDetails() {
                 <div className="flex items-center border border-[var(--color-border)] rounded-full bg-[var(--color-background)] p-1 shadow-inner">
                   <button
                     onClick={handleDecrease}
-                    disabled={!isAvailable || quantity <= 1}
+                    disabled={!isAvailable || quantity <= 1 || adding}
                     className="w-9 h-9 rounded-full flex items-center justify-center text-xs text-[var(--color-text)] hover:bg-[var(--color-surface)] disabled:opacity-40 transition-colors"
                     aria-label="Decrease quantity"
                   >
@@ -222,7 +224,7 @@ export default function ProductDetails() {
                   </span>
                   <button
                     onClick={handleIncrease}
-                    disabled={!isAvailable || quantity >= (product.stock || 99)}
+                    disabled={!isAvailable || quantity >= (product.stock || 99) || adding}
                     className="w-9 h-9 rounded-full flex items-center justify-center text-xs text-[var(--color-text)] hover:bg-[var(--color-surface)] disabled:opacity-40 transition-colors"
                     aria-label="Increase quantity"
                   >
@@ -246,15 +248,17 @@ export default function ProductDetails() {
             <div className="pt-4">
               <button
                 onClick={handleAddToCart}
-                disabled={!isAvailable}
+                disabled={!isAvailable || adding}
                 className={`w-full py-3.5 px-6 rounded-full font-semibold uppercase tracking-wider text-xs flex items-center justify-center gap-3 shadow-md transition-all ${
-                  isAvailable
+                  isAvailable && !adding
                     ? "bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-dark)] hover:scale-[1.01] cursor-pointer"
                     : "bg-gray-300 text-gray-500 cursor-not-allowed shadow-none"
                 }`}
               >
                 <FaShoppingCart size={15} />
-                <span>{isAvailable ? "Add to Cart" : "Currently Unavailable"}</span>
+                <span>
+                  {adding ? "Adding to Cart..." : isAvailable ? "Add to Cart" : "Currently Unavailable"}
+                </span>
               </button>
             </div>
 

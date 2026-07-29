@@ -2,15 +2,33 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { FaShoppingCart, FaPhoneAlt, FaBars, FaTimes } from "react-icons/fa";
 import logo from "../../../assets/kithula_logo.jpg";
+import CartServices from "../../../services/cart.service"; // Adjust path to match your folder structure
 
 function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
   const location = useLocation();
 
   const isHomePage = location.pathname === "/";
 
+  // Fetch cart item count
+  const fetchCartCount = async () => {
+    try {
+      const response = await CartServices.getCartItems();
+      const items = response?.data?.items || [];
+      // Calculate total item count based on quantity of each item
+      const totalCount = items.reduce((sum, item) => sum + (item.quantity || 1), 0);
+      setCartCount(totalCount);
+    } catch (error) {
+      console.error("Failed to fetch cart count for navbar:", error);
+    }
+  };
+
   useEffect(() => {
+    // Initial fetch on mount or route change
+    fetchCartCount();
+
     const handleScroll = () => {
       if (window.scrollY > 50) {
         setIsScrolled(true);
@@ -21,7 +39,7 @@ function Navbar() {
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [location.pathname]);
 
   const isActive = (path) => location.pathname === path;
 
@@ -106,21 +124,25 @@ function Navbar() {
               <span>077 456 7890</span>
             </a>
 
-            {/* Shopping Cart Button */}
-            <button
+            {/* Shopping Cart Link */}
+            <Link
+              to="/cart"
               className={`relative p-3 rounded-full transition-all duration-300 ${
                 isHomePage && !isScrolled
                   ? "bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white hover:text-[var(--color-text)]"
                   : "bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-dark)]"
               }`}
+              aria-label="View Shopping Cart"
             >
               <FaShoppingCart size={18} />
 
-              {/* Cart Badge */}
-              <span className="absolute -top-1 -right-1 bg-[var(--color-secondary)] text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center border-2 border-white">
-                0
-              </span>
-            </button>
+              {/* Dynamic Cart Badge */}
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-[var(--color-secondary)] text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center border-2 border-white">
+                  {cartCount}
+                </span>
+              )}
+            </Link>
 
             {/* Mobile Hamburger Menu Toggle */}
             <button
@@ -172,6 +194,18 @@ function Navbar() {
                 className="block cursor-pointer hover:text-[var(--color-primary)] py-1 border-b border-[var(--color-border)]"
               >
                 Gallery
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/cart"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block cursor-pointer hover:text-[var(--color-primary)] py-1 border-b border-[var(--color-border)] flex justify-between items-center"
+              >
+                <span>Shopping Cart</span>
+                <span className="bg-[var(--color-primary)] text-white text-xs px-2 py-0.5 rounded-full font-bold">
+                  {cartCount}
+                </span>
               </Link>
             </li>
           </ul>
