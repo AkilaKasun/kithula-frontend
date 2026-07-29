@@ -1,53 +1,88 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { FaEye, FaShoppingCart } from 'react-icons/fa';
+import { toast } from 'react-toastify';
 
 export default function ProductCard({ product }) {
   if (!product) return null;
 
-  return (
-    <div className="group bg-[var(--color-surface)] rounded-2xl overflow-hidden border border-[var(--color-border)] shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
-      {/* Image Container with Fallback */}
-      <div className="relative h-72 overflow-hidden bg-gray-100 flex items-center justify-center">
-        <img 
-          src={product.image_url} 
-          alt={product.name} 
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-          onError={(e) => {
-            console.error(`S3 image load blocked/failed for: ${product.image_url}`);
-            e.target.onerror = null; 
-            e.target.src = "https://placehold.co/600x400?text=Image+Access+Blocked";
-          }}
-        />
-        {/* <span className="absolute top-4 right-4 bg-white/90 backdrop-blur-md text-[var(--color-text)] text-xs px-3 py-1 rounded-full font-semibold">
-          ★ 5.0
-        </span> */}
-      </div>
+  const handleAddToCart = (e) => {
+    e.stopPropagation(); // Prevents triggering parent link navigations if any
+    
+    if (product.is_active === false) {
+      toast.error("This product is currently out of stock.");
+      return;
+    }
+    
+    toast.success(`Added "${product.name}" to cart!`);
+  };
 
-      {/* Card Content */}
-      <div className="p-6 flex flex-col flex-grow justify-between">
-        <div>
-          <p className="text-xs text-[var(--color-text-secondary)] uppercase tracking-wider">
+  return (
+    <div className="group bg-[var(--color-surface)] rounded-2xl overflow-hidden border border-[var(--color-border)] shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between">
+      
+      {/* Top Section: Image & Content */}
+      <div>
+        {/* Image Container with Fallback */}
+        <div className="relative h-64 overflow-hidden bg-gray-100 flex items-center justify-center">
+          <img 
+            src={product.image_url} 
+            alt={product.name} 
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            onError={(e) => {
+              console.error(`S3 image load blocked/failed for: ${product.image_url}`);
+              e.target.onerror = null; 
+              e.target.src = "https://placehold.co/600x400?text=Image+Access+Blocked";
+            }}
+          />
+        </div>
+
+        {/* Card Body */}
+        <div className="p-5">
+          <p className="text-xs text-[var(--color-text-secondary)] uppercase tracking-wider font-semibold">
             {product.category || "Organic"}
           </p>
-          <h3 className="text-xl font-serif text-[var(--color-text)] mt-1 mb-2 font-medium">
+          <h3 className="text-lg font-serif text-[var(--color-text)] mt-1 mb-2 font-bold line-clamp-1">
             {product.name}
           </h3>
-          <p className="text-xs text-[var(--color-text-secondary)] line-clamp-2">
+          <p className="text-xs text-[var(--color-text-secondary)] line-clamp-2 leading-relaxed">
             {product.description}
           </p>
         </div>
+      </div>
 
-        <div className="mt-6 flex items-center justify-between pt-4 border-t border-[var(--color-border)]">
-          <div>
-            <span className="text-xs text-[var(--color-text-secondary)]">Price</span>
-            <p className="text-lg font-bold text-[var(--color-primary)]">
-              LKR {Number(product.price).toLocaleString()}.00
-            </p>
-          </div>
-          <button className="px-5 py-2.5 bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white text-sm rounded-xl font-medium transition-colors">
-            Add to Cart
+      {/* Bottom Section: Price & Action Buttons */}
+      <div className="p-5 pt-0">
+        <div className="mb-4 pt-3 border-t border-[var(--color-border)] flex items-baseline justify-between">
+          <span className="text-xs text-[var(--color-text-secondary)] uppercase font-medium">
+            Price
+          </span>
+          <p className="text-lg font-bold text-[var(--color-primary)]">
+            LKR {Number(product.price || 0).toLocaleString()}.00
+          </p>
+        </div>
+
+        {/* Dual Button Grid */}
+        <div className="grid grid-cols-2 gap-2">
+          {/* 1. View Product Button */}
+          <Link
+            to={`/products/${product.product_id}`}
+            className="w-full py-2.5 px-3 bg-[var(--color-background)] hover:bg-[var(--color-surface)] text-[var(--color-text)] border border-[var(--color-border)] text-xs uppercase tracking-wider font-semibold rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-sm text-center"
+          >
+            <FaEye size={13} className="text-[var(--color-accent)]" />
+            <span>View</span>
+          </Link>
+
+          {/* 2. Add to Cart Button */}
+          <button
+            onClick={handleAddToCart}
+            className="w-full py-2.5 px-3 bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white text-xs uppercase tracking-wider font-semibold rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-sm cursor-pointer"
+          >
+            <FaShoppingCart size={13} />
+            <span>Add</span>
           </button>
         </div>
       </div>
+
     </div>
   );
 }

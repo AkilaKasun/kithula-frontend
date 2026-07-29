@@ -8,6 +8,7 @@ import Footer from "./components/layout/footer/footer";
 import HomePage from "./pages/HomePage/HomePage";
 import AboutUs from "./pages/AboutUs/AboutUs";
 import Products from "./pages/Products/Products";
+import ProductDetails from "./pages/Products/ProductDetails";
 
 
 
@@ -20,6 +21,7 @@ function App() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/about-us" element={<AboutUs />} />
                 <Route path="/products" element={<Products />} />
+                <Route path="/products/:product_id" element={<ProductDetails />} />
 
             </Routes>
             <Footer />

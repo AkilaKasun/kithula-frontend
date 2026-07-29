@@ -24,6 +24,19 @@ const ProductServices = {
       throw error;
     }
   },
+  getProductById: async (product_id) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/products/${product_id}`);
+      const product = response.data?.data;
+      return product;
+    } catch (error) {
+      console.error("Error fetching product:", error);
+      const errorMessage =
+        error.response?.data?.message || error.message || "Failed to fetch product";
+      toast.error(errorMessage);
+      throw error;
+    }
+  }
 };
 
 export default ProductServices;

@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import ProductServices from "../../services/product.service";
 import ProductCard from "../../components/products/ProductCard";
+import Banner from "../../assets/product_banner.jpg";
 import { FaSearch, FaFilter, FaSortAmountDown, FaMoneyBillWave, FaUndo } from "react-icons/fa";
 
 export default function Products() {
@@ -86,7 +87,7 @@ export default function Products() {
       <div className="relative w-full bg-black text-white shadow-lg min-h-[420px] flex items-center justify-center mb-12">
         {/* Background Image with Dark Overlay */}
         <img
-          src="/images/hero-banner.jpg"
+          src={Banner}
           alt="Kithula Banner"
           className="absolute inset-0 w-full h-full object-cover opacity-45"
           onError={(e) => {
