@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FaTrash, FaShoppingBag, FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { toast } from "react-toastify";
-import CartServices from "../../services/cart.service"; // Adjust path to your services folder
+import CartServices from "../../services/cart.service"; // Adjust path as needed
 
 export default function CartPage() {
   const [cart, setCart] = useState(null);
@@ -14,7 +14,6 @@ export default function CartPage() {
       setLoading(true);
       const response = await CartServices.getCartItems();
       
-      // Response structure: response.data contains { cart_id, customer_id, items, grand_total }
       if (response && response.data) {
         setCart(response.data);
       } else {
@@ -22,7 +21,7 @@ export default function CartPage() {
       }
     } catch (error) {
       console.error("Failed to load cart items:", error);
-    } finally {
+    }  finally {
       setLoading(false);
     }
   };
@@ -31,13 +30,13 @@ export default function CartPage() {
     fetchCart();
   }, []);
 
-  // Delete Cart Item Handler
+  // Delete Cart Item Handler with Active API Integration
   const handleDeleteItem = async (cartItemId, productName) => {
     try {
-      // Calls API to remove item (or update state)
-      // await CartServices.removeFromCart(cartItemId);
-      
-      // Optimistic state update or re-fetch
+      // Execute persistent deletion via backend API
+      await CartServices.removeFromCart(cartItemId);
+
+      // Update state upon API success
       setCart((prevCart) => {
         if (!prevCart) return null;
         const updatedItems = prevCart.items.filter(
@@ -53,11 +52,8 @@ export default function CartPage() {
           grand_total: newGrandTotal,
         };
       });
-
-      toast.success(`Removed "${productName}" from cart`);
     } catch (error) {
-      console.error("Failed to remove item:", error);
-      toast.error("Could not remove item from cart");
+      console.error("Failed to remove item from backend:", error);
     }
   };
 
@@ -117,7 +113,7 @@ export default function CartPage() {
           </span>
         </div>
 
-        {/* Layout Grid: Left (Items List) | Right (Summary & Checkout) */}
+        {/* Layout Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
           
           {/* LEFT SIDE: Cart Items List */}
@@ -127,7 +123,7 @@ export default function CartPage() {
                 key={item.cart_item_id}
                 className="bg-[var(--color-surface)] rounded-2xl p-4 sm:p-5 border border-[var(--color-border)] shadow-sm flex items-center justify-between gap-4 transition-all hover:shadow-md"
               >
-                {/* Product Thumbnail & Basic Info */}
+                {/* Product Thumbnail & Details */}
                 <div className="flex items-center gap-4 min-w-0">
                   <img
                     src={encodeURI(item.image_url)}
@@ -162,7 +158,7 @@ export default function CartPage() {
                     </strong>
                   </div>
 
-                  {/* Delete Button */}
+                  {/* Active Delete Button */}
                   <button
                     onClick={() => handleDeleteItem(item.cart_item_id, item.product_name)}
                     className="p-2.5 text-rose-500 hover:text-white hover:bg-rose-500 bg-rose-50 border border-rose-200 rounded-xl transition-all cursor-pointer"
@@ -175,7 +171,7 @@ export default function CartPage() {
               </div>
             ))}
 
-            {/* Navigation back to shop */}
+            {/* Navigation Link */}
             <div className="pt-2">
               <Link
                 to="/products"
@@ -186,7 +182,7 @@ export default function CartPage() {
             </div>
           </div>
 
-          {/* RIGHT SIDE: Order Summary & Checkout */}
+          {/* RIGHT SIDE: Summary & Checkout */}
           <div className="bg-[var(--color-surface)] rounded-3xl p-6 border border-[var(--color-border)] shadow-sm space-y-6 sticky top-24">
             <h2 className="text-lg font-serif font-bold text-[var(--color-text)] border-b border-[var(--color-border)] pb-3">
               Order Summary
@@ -209,7 +205,7 @@ export default function CartPage() {
               ))}
             </div>
 
-            {/* Grand Total Bar */}
+            {/* Grand Total */}
             <div className="border-t border-[var(--color-border)] pt-4 flex items-baseline justify-between">
               <span className="text-xs uppercase tracking-wider font-bold text-[var(--color-text-secondary)]">
                 Grand Total
@@ -219,7 +215,7 @@ export default function CartPage() {
               </strong>
             </div>
 
-            {/* Checkout Button */}
+            {/* Checkout Link */}
             <Link
               to="/checkout"
               className="w-full py-3.5 px-6 bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white text-xs uppercase tracking-wider font-semibold rounded-full transition-all flex items-center justify-center gap-2 shadow-md hover:scale-[1.01]"
@@ -228,7 +224,6 @@ export default function CartPage() {
               <FaArrowRight size={12} />
             </Link>
 
-            {/* Payment & Security note */}
             <p className="text-[11px] text-center text-[var(--color-text-secondary)]">
               🔒 Safe & Secure Checkout Guaranteed
             </p>
