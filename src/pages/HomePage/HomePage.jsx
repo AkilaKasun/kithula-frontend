@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import ProductServices from "../../services/product.service";
 import bannerImg from "../../assets/Banner_image.jpg";
 import ProductCard from "../../components/products/ProductCard";
+import LoadingScreen from "../../components/LoadingScreen/LoadingScreen"; // 1. Import LoadingScreen
 
 // Category Data for Kithula Products
 const POPULAR_CATEGORIES = [
@@ -25,7 +26,7 @@ const POPULAR_CATEGORIES = [
   },
 ];
 
-// Product Slider Data (Between Categories and Products)
+// Product Slider Data
 const SLIDER_IMAGES = [
   {
     url: "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&q=80&w=1600",
@@ -72,7 +73,7 @@ const CUSTOMER_FEEDBACKS = [
   },
 ];
 
-// Sample gallery data for Kithula Grand
+// Gallery data for Kithula Grand
 const GALLERY_IMAGES = [
   {
     url: "https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?auto=format&fit=crop&q=80&w=1000",
@@ -104,6 +105,7 @@ export default function HomePage() {
       } catch (error) {
         console.error("Failed to load products:", error);
       } finally {
+        // Small artificial delay (500ms) can ensure smooth transition for instant APIs
         setLoading(false);
       }
     };
@@ -118,6 +120,11 @@ export default function HomePage() {
     }, 5000);
     return () => clearInterval(timer);
   }, []);
+
+  // 2. Return full-screen LoadingScreen while fetching initial data
+  if (loading) {
+    return <LoadingScreen />;
+  }
 
   return (
     <div className="min-h-screen bg-[var(--color-background)] text-[var(--color-text)] font-sans">
@@ -279,16 +286,7 @@ export default function HomePage() {
           </p>
         </div>
 
-        {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[1, 2, 3].map((n) => (
-              <div
-                key={n}
-                className="animate-pulse bg-[var(--color-surface)] h-96 rounded-2xl border border-[var(--color-border)]"
-              ></div>
-            ))}
-          </div>
-        ) : products.length === 0 ? (
+        {products.length === 0 ? (
           <div className="text-left py-12 text-[var(--color-text-secondary)] text-base">
             No products available at the moment.
           </div>
