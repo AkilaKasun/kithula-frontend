@@ -8,6 +8,11 @@ export default function CartPage() {
   const [cart, setCart] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Automatically scroll to the top when the Cart Page loads
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // Fetch cart data on component mount
   const fetchCart = async () => {
     try {
@@ -21,7 +26,7 @@ export default function CartPage() {
       }
     } catch (error) {
       console.error("Failed to load cart items:", error);
-    }  finally {
+    } finally {
       setLoading(false);
     }
   };
@@ -52,6 +57,9 @@ export default function CartPage() {
           grand_total: newGrandTotal,
         };
       });
+
+      // Dispatch custom event to refresh Navbar badge count immediately
+      window.dispatchEvent(new Event("cartUpdated"));
     } catch (error) {
       console.error("Failed to remove item from backend:", error);
     }

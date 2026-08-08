@@ -21,6 +21,11 @@ export default function ProductDetails() {
   const [adding, setAdding] = useState(false);
   const [quantity, setQuantity] = useState(1);
 
+  // Automatically scroll to the top whenever the page mounts or product ID changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]);
+
   useEffect(() => {
     const fetchProductDetails = async () => {
       try {
@@ -67,6 +72,9 @@ export default function ProductDetails() {
       setAdding(true);
       // Triggers CartServices with selected quantity & auto-managed localStorage UUID
       await CartServices.addToCart(product.product_id, quantity);
+      
+      // Dispatch custom browser event to update navbar badge count immediately
+      window.dispatchEvent(new Event("cartUpdated"));
     } catch (error) {
       console.error("Add to cart failed:", error);
     } finally {

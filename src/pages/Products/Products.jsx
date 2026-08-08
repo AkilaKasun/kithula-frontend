@@ -14,6 +14,10 @@ export default function Products() {
   const [sortBy, setSortBy] = useState("default");
   const [maxPriceFilter, setMaxPriceFilter] = useState(10000);
 
+    useEffect(() => {
+      window.scrollTo(0, 0);
+    }, []);
+    
   useEffect(() => {
     const fetchProducts = async () => {
       try {

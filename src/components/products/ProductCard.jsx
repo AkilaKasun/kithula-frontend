@@ -1,16 +1,36 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { FaEye, FaShoppingCart } from 'react-icons/fa';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { FaEye, FaShoppingCart, FaSpinner } from 'react-icons/fa';
+import { toast } from 'react-toastify';
+import CartServices from '../../services/cart.service'; // Adjust path as needed
 
 export default function ProductCard({ product }) {
-  const navigate = useNavigate();
+  const [isAdding, setIsAdding] = useState(false);
 
   if (!product) return null;
 
-  const handleGoToDetails = (e) => {
-    e.stopPropagation();
-    // Navigates directly to the product details page
-    navigate(`/products/${product.product_id}`);
+  const handleAddToCart = async (e) => {
+    e.stopPropagation(); // Prevents triggering parent link navigations
+
+    if (product.is_active === false) {
+      toast.error("This product is currently out of stock.");
+      return;
+    }
+
+    try {
+      setIsAdding(true);
+
+      // Call API directly using CartServices
+      await CartServices.addToCart(product.product_id || product.id, 1);
+
+      // Dispatch a custom browser event so Navbar knows to fetch updated count immediately
+      window.dispatchEvent(new Event("cartUpdated"));
+
+    } catch (error) {
+      console.error("Failed to add item to cart:", error);
+    } finally {
+      setIsAdding(false);
+    }
   };
 
   return (
@@ -57,7 +77,7 @@ export default function ProductCard({ product }) {
           </p>
         </div>
 
-        {/* Dual Button Grid - Both Navigate to Product Details */}
+        {/* Action Buttons Grid */}
         <div className="grid grid-cols-2 gap-2">
           {/* View Product Button */}
           <Link
@@ -68,13 +88,19 @@ export default function ProductCard({ product }) {
             <span>View</span>
           </Link>
 
-          {/* Add to Cart Button (Navigates to Product Details) */}
+          {/* Add to Cart Button */}
           <button
-            onClick={handleGoToDetails}
-            className="w-full py-2.5 px-3 bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white text-xs uppercase tracking-wider font-semibold rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-sm cursor-pointer"
+            type="button"
+            onClick={handleAddToCart}
+            disabled={isAdding}
+            className="w-full py-2.5 px-3 bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white text-xs uppercase tracking-wider font-semibold rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-sm cursor-pointer disabled:opacity-60"
           >
-            <FaShoppingCart size={13} />
-            <span>Add</span>
+            {isAdding ? (
+              <FaSpinner size={13} className="animate-spin" />
+            ) : (
+              <FaShoppingCart size={13} />
+            )}
+            <span>{isAdding ? "Adding..." : "Add"}</span>
           </button>
         </div>
       </div>
