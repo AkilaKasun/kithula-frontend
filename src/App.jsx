@@ -4,6 +4,7 @@ import { ToastContainer } from 'react-toastify';
 
 import Navbar from "./components/layout/navbar/navbar";
 import Footer from "./components/layout/footer/footer";
+import WhatsAppButton from "./components/common/WhatsAppButton"; // 1. Import Component
 
 import HomePage from "./pages/HomePage/HomePage";
 import AboutUs from "./pages/AboutUs/AboutUs";
@@ -11,8 +12,6 @@ import Products from "./pages/Products/Products";
 import ProductDetails from "./pages/Products/ProductDetails";
 import CartPage from "./pages/CartPage/CartPage";
 import CheckoutPage from "./pages/OrderPage/CheckoutPage";
-
-
 
 function App() {
     return (
@@ -26,9 +25,9 @@ function App() {
                 <Route path="/products/:id" element={<ProductDetails />} />
                 <Route path="/cart" element={<CartPage />} />
                 <Route path="/checkout" element={<CheckoutPage />} />
-
             </Routes>
             <Footer />
+            <WhatsAppButton /> {/* 2. Floating Icon Component */}
         </Router>
     );
 }

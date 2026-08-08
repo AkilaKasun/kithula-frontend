@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom"; // Ensure Link is imported
 import ProductServices from "../../services/product.service";
 import bannerImg from "../../assets/Banner_image.jpg";
 import ProductCard from "../../components/products/ProductCard";
-import LoadingScreen from "../../components/LoadingScreen/LoadingScreen"; // 1. Import LoadingScreen
+import LoadingScreen from "../../components/LoadingScreen/LoadingScreen";
 
 // Category Data for Kithula Products
 const POPULAR_CATEGORIES = [
@@ -105,7 +106,6 @@ export default function HomePage() {
       } catch (error) {
         console.error("Failed to load products:", error);
       } finally {
-        // Small artificial delay (500ms) can ensure smooth transition for instant APIs
         setLoading(false);
       }
     };
@@ -121,7 +121,6 @@ export default function HomePage() {
     return () => clearInterval(timer);
   }, []);
 
-  // 2. Return full-screen LoadingScreen while fetching initial data
   if (loading) {
     return <LoadingScreen />;
   }
@@ -143,9 +142,12 @@ export default function HomePage() {
               KITHULA
             </span>
           </div>
-          <button className="hidden sm:inline-block bg-white/10 backdrop-blur-md border border-white/30 text-white px-5 py-2 rounded-full hover:bg-white hover:text-[var(--color-text)] transition-all duration-300 font-medium">
+          <Link 
+            to="/products"
+            className="hidden sm:inline-block bg-white/10 backdrop-blur-md border border-white/30 text-white px-5 py-2 rounded-full hover:bg-white hover:text-[var(--color-text)] transition-all duration-300 font-medium text-sm"
+          >
             Explore Collection →
-          </button>
+          </Link>
         </div>
 
         {/* Hero Left Aligned Container */}
@@ -167,13 +169,23 @@ export default function HomePage() {
             Traditional, unrefined, and crafted with timeless passion.
           </p>
 
+          {/* Action Links */}
           <div className="flex flex-col sm:flex-row items-center justify-start gap-4 pt-4">
-            <button className="w-full sm:w-auto px-8 py-4 bg-[var(--color-secondary)] hover:bg-[var(--color-secondary-dark)] text-white rounded-full font-medium transition-all shadow-lg hover:shadow-xl text-base">
+            {/* Navigates to Products Page */}
+            <Link 
+              to="/products"
+              className="w-full sm:w-auto px-8 py-4 bg-[var(--color-secondary)] hover:bg-[var(--color-secondary-dark)] text-white rounded-full font-medium transition-all shadow-lg hover:shadow-xl text-base text-center"
+            >
               Shop Natural Products
-            </button>
-            <button className="w-full sm:w-auto px-8 py-4 bg-white/10 backdrop-blur-md border border-white/30 hover:bg-white/20 text-white rounded-full font-medium transition-all text-base">
+            </Link>
+
+            {/* Navigates to About Us Page */}
+            <Link 
+              to="/about-us"
+              className="w-full sm:w-auto px-8 py-4 bg-white/10 backdrop-blur-md border border-white/30 hover:bg-white/20 text-white rounded-full font-medium transition-all text-base text-center"
+            >
               Discover Kithula Grand
-            </button>
+            </Link>
           </div>
         </div>
 
@@ -198,8 +210,9 @@ export default function HomePage() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {POPULAR_CATEGORIES.map((cat) => (
-            <div
+            <Link
               key={cat.id}
+              to="/products"
               className="group relative h-96 rounded-2xl overflow-hidden shadow-md hover:shadow-xl border border-[var(--color-border)] cursor-pointer transition-all duration-500"
             >
               <img
@@ -218,7 +231,7 @@ export default function HomePage() {
                   Explore Category →
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </section>

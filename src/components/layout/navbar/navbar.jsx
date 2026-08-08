@@ -103,14 +103,14 @@ function Navbar() {
                 Products
               </Link>
             </li>
-            <li>
+            {/* <li>
               <Link 
                 to="/gallery" 
                 className={`hover:text-[var(--color-accent)] transition duration-300 ${isActive('/gallery') ? 'text-[var(--color-accent)] font-semibold' : ''}`}
               >
                 Gallery
               </Link>
-            </li>
+            </li> */}
           </ul>
 
           {/* Right Action Icons */}
@@ -187,7 +187,7 @@ function Navbar() {
                 Products
               </Link>
             </li>
-            <li>
+            {/* <li>
               <Link
                 to="/gallery"
                 onClick={() => setMobileMenuOpen(false)}
@@ -195,7 +195,7 @@ function Navbar() {
               >
                 Gallery
               </Link>
-            </li>
+            </li> */}
             <li>
               <Link
                 to="/cart"
